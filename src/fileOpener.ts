@@ -1,6 +1,6 @@
 'use strict';
 
-import {window, workspace, Range} from 'vscode';
+import {window, workspace, Range, commands} from 'vscode';
 
 export function execute()
 {
@@ -50,15 +50,14 @@ function _getFilePathOnWorkSpace(word : string)
         
         extentions.forEach(extention => {
             if(flg){return;}
-            let uri = uris.find(u => u.path.endsWith(extention));
+            let uri = uris.find(u => u.path.toLowerCase().endsWith(extention.toLowerCase()));
             if(uri === undefined )
             {
                 return;
             }
             flg = true;
-            // Open->Show
-            workspace.openTextDocument(uri)
-            .then(txtDocument=> window.showTextDocument(txtDocument));
+            // Open
+            let success = commands.executeCommand('vscode.open', uri);
         });
         if(!flg)
         {
